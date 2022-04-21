@@ -2,6 +2,7 @@ package com.example.pro_valyuta.retrofit
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.io.Serializable
 
 @Entity
 class Valyuta(
@@ -13,4 +14,4 @@ class Valyuta(
     val title: String,
     @PrimaryKey(autoGenerate = true)
     val id: Int
-)
+):Serializable

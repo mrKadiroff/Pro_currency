@@ -5,18 +5,19 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.pro_valyuta.GlavniFragment
+import com.example.pro_valyuta.livedata.RecyclerFragment
 import com.example.pro_valyuta.retrofit.Valyuta
 
-class ViewPagerAdapter(
+class ViewPagerAdapterProba(
     var list: List<Valyuta>?,
     var listRoom: List<Valyuta>, fragmentManager: FragmentManager, lifecycle: Lifecycle) :
     FragmentStateAdapter(fragmentManager, lifecycle) {
 
     override fun getItemCount(): Int {
-       return list!!.size
+       return listRoom.size
     }
 
     override fun createFragment(position: Int): Fragment {
-        return GlavniFragment.newInstance(position, list!![position].code)
+        return RecyclerFragment.newInstance(listRoom!![position].code, list!![position].code)
     }
 }

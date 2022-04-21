@@ -19,7 +19,6 @@
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager2"
-        android:background="#F9F9F9"
         android:layout_width="match_parent"
         app:layout_constraintTop_toBottomOf="@id/tabLayoutgalvni"
         android:layout_height="170dp">
@@ -30,16 +29,57 @@
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
-        android:background="#F9F9F9"
         android:layout_width="match_parent"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
         app:tabBackground="@drawable/tab_selector"
         app:tabMaxWidth="25sp"
         app:tabMode="scrollable"
         app:tabGravity="center"
         app:tabIndicatorHeight="0dp"
+        app:layout_constraintEnd_toEndOf="@id/viewPager2"
         app:layout_constraintTop_toBottomOf="@id/viewPager2"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom" />
+
+
+    <TextView
+        android:id="@+id/story"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20sp"
+        app:layout_constraintTop_toBottomOf="@id/tabLayout"
+        android:text="Valyutalarning o'zgarish tarixi"
+        android:textColor="@color/black"
+        android:textStyle="bold"/>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/story"
+        android:visibility="gone"
+        android:layout_marginTop="24sp"
+        app:layout_constraintBaseline_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.060000002"
+        tools:listitem="@layout/user_list" />
+
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPagerproba"
+        android:layout_width="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/story"
+        android:layout_height="0dp">
+
+
+    </androidx.viewpager2.widget.ViewPager2>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

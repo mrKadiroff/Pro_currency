@@ -1,9 +1,9 @@
-package com.example.pro_valyuta.retrofit
+package com.example.pro_valyuta.photoRetrofit
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-object RetrofitClient {
+object RetrofitClientPhoto {
 
     const val BASE_URL = "https://nbu.uz/"
 
@@ -14,5 +14,5 @@ object RetrofitClient {
             .build()
     }
 
-    val apiService = getRetrofit().create(RetrofitService::class.java)
+    val apiServicePhoto = getRetrofit().create(RetrofitServicePhoto::class.java)
 }

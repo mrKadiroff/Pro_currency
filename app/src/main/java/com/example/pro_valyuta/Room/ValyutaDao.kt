@@ -13,4 +13,14 @@ interface ValyutaDao {
 
     @Query("select * from valyuta")
     fun getAllCurrency(): List<Valyuta>
+
+
+
+    @Query("select * from valyuta where code=:codeIt")
+    fun getCurrencyByCode(codeIt: String): List<Valyuta>
+
+
+
+    @Query("select * from valyuta where date=:date")
+    fun getCurrencyByDate(date: String): List<Valyuta>
 }

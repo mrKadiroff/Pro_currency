@@ -7,11 +7,17 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.example.pro_valyuta.Room.AppDatabase
+import com.example.pro_valyuta.adapters.CurrencyAdapter
 import com.example.pro_valyuta.adapters.ViewPagerAdapter
+import com.example.pro_valyuta.adapters.ViewPagerAdapterProba
 import com.example.pro_valyuta.databinding.FragmentHomeBinding
 import com.example.pro_valyuta.databinding.TabItemBinding
-import com.example.pro_valyuta.retrofit.Common
+import com.example.pro_valyuta.livedata.MainViewModel
+import com.example.pro_valyuta.retrofit.RetrofitClient
 import com.example.pro_valyuta.retrofit.RetrofitService
 import com.example.pro_valyuta.retrofit.Valyuta
 import com.google.android.material.tabs.TabLayout
@@ -60,7 +66,9 @@ class HomeFragment : Fragment() {
     lateinit var retrofitService: RetrofitService
     lateinit var appDatabase: AppDatabase
     lateinit var currencylist:ArrayList<Valyuta>
-    lateinit var data: ArrayList<Valyuta>
+    lateinit var datelist:ArrayList<Valyuta>
+    lateinit var mainViewModel: MainViewModel
+    lateinit var currencyAdapter: CurrencyAdapter
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -69,26 +77,114 @@ class HomeFragment : Fragment() {
 
         binding = FragmentHomeBinding.inflate(layoutInflater,container,false)
         appDatabase = AppDatabase.getInstance(binding.root.context)
+        mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
+
+
 
 
         glavni()
 
         indicator()
 
-        retrofitService = Common.retrofitService
+        RvPager()
 
-        retrofitService.getListCurrency().enqueue(object:
-        Callback<List<Valyuta>> {
+
+       return binding.root
+
+    }
+
+    private fun RvPager() {
+
+        mainViewModel.getCurrency().observe(requireActivity(), Observer {
+            Log.d(TAG, "onCreateView: ${it}")
+
+
+
+            currencylist = ArrayList()
+            currencylist = appDatabase.valyutaDao().getAllCurrency() as ArrayList<Valyuta>
+            val viewPager2 = binding.viewPagerproba
+            val tabLayout = binding.tabLayout
+            val adapter = ViewPagerAdapterProba(it,currencylist,childFragmentManager, lifecycle)
+            viewPager2.adapter = adapter
+
+            TabLayoutMediator(tabLayout, viewPager2) { tab, position ->
+                //Some implementation
+            }.attach()
+
+
+
+        })
+
+
+    }
+
+    private fun glavni() {
+
+
+
+        RetrofitClient.apiService.getListCurrency().enqueue(object:
+            Callback<List<Valyuta>> {
             override fun onResponse(call: Call<List<Valyuta>>, response: Response<List<Valyuta>>) {
                 if (response.isSuccessful){
-                   val data = response.body()
+
+                    val data = response.body()
+
                     currencylist = ArrayList()
                     currencylist = appDatabase.valyutaDao().getAllCurrency() as ArrayList<Valyuta>
-                    if (currencylist.isNullOrEmpty()){
-                        data?.forEach {
+
+
+
+
+                    data!!.forEach {
+
+                        datelist = ArrayList()
+                        datelist = appDatabase.valyutaDao().getCurrencyByDate(it.date) as ArrayList<Valyuta>
+                        if (datelist.isNullOrEmpty() || currencylist.isNullOrEmpty()){
                             appDatabase.valyutaDao().insertCurrency(it)
                         }
+
+
+
+
+
+
+
                     }
+
+
+
+                    val viewPager = binding.viewPager2
+                    val tabLayoutgl =  binding.tabLayoutgalvni
+
+                    val adapter = ViewPagerAdapter(data,currencylist,childFragmentManager, lifecycle)
+                    viewPager.adapter = adapter
+                    TabLayoutMediator(tabLayoutgl, viewPager) { tab, position ->
+                        val itemBinding = TabItemBinding.inflate(layoutInflater)
+                        tab.customView = itemBinding.root
+                        itemBinding.titleTv.text = data!![position].code
+
+                        setRv(data[position].code)
+
+
+                        if (position == 0) {
+                            itemBinding.titleTv.setBackgroundResource(R.drawable.tab_item_back_selected)
+                            itemBinding.titleTv.setTextColor(Color.WHITE)
+
+                        } else {
+                            itemBinding.titleTv.setTextColor(Color.parseColor("#303236"))
+                            itemBinding.titleTv.setBackgroundResource(R.drawable.tab_item_back_unselected)
+                        }
+
+                        //Some implementation
+                    }.attach()
+
+
+
+
+
+
+
+
 
 
 
@@ -97,45 +193,12 @@ class HomeFragment : Fragment() {
             }
 
             override fun onFailure(call: Call<List<Valyuta>>, t: Throwable) {
-                Log.d(TAG, "onFailure: ${t.message}")
-            }
 
+            }
 
         })
 
 
-
-       return binding.root
-
-    }
-
-    private fun glavni() {
-        currencylist = ArrayList()
-        currencylist = appDatabase.valyutaDao().getAllCurrency() as ArrayList<Valyuta>
-
-
-        val viewPager = binding.viewPager2
-        val tabLayoutgl =  binding.tabLayoutgalvni
-
-        val adapter = ViewPagerAdapter(currencylist,childFragmentManager, lifecycle)
-        viewPager.adapter = adapter
-        TabLayoutMediator(tabLayoutgl, viewPager) { tab, position ->
-            val itemBinding = TabItemBinding.inflate(layoutInflater)
-            tab.customView = itemBinding.root
-            itemBinding.titleTv.text = currencylist[position].code
-
-
-            if (position == 0) {
-                itemBinding.titleTv.setBackgroundResource(R.drawable.tab_item_back_selected)
-                itemBinding.titleTv.setTextColor(Color.WHITE)
-
-            } else {
-                itemBinding.titleTv.setTextColor(Color.parseColor("#303236"))
-                itemBinding.titleTv.setBackgroundResource(R.drawable.tab_item_back_unselected)
-            }
-
-            //Some implementation
-        }.attach()
 
         binding.tabLayoutgalvni.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
@@ -161,24 +224,46 @@ class HomeFragment : Fragment() {
 
     }
 
+    private fun setRv(code:String) {
+        val currencyByCode = appDatabase.valyutaDao().getCurrencyByCode(code)
+
+        currencyAdapter = CurrencyAdapter(currencyByCode)
+        binding.rv.adapter = currencyAdapter
+
+    }
+
     private fun indicator() {
-        currencylist = ArrayList()
-        currencylist = appDatabase.valyutaDao().getAllCurrency() as ArrayList<Valyuta>
-        val viewPager2 = binding.viewPager2
-        val tabLayout = binding.tabLayout
-        val adapter = ViewPagerAdapter(currencylist,childFragmentManager, lifecycle)
-        viewPager2.adapter = adapter
 
-        TabLayoutMediator(tabLayout, viewPager2) { tab, position ->
-            //Some implementation
-        }.attach()
+
+        mainViewModel.getCurrency().observe(requireActivity(), Observer {
+            Log.d(TAG, "onCreateView: ${it}")
+
+
+
+            currencylist = ArrayList()
+            currencylist = appDatabase.valyutaDao().getAllCurrency() as ArrayList<Valyuta>
+            val viewPager2 = binding.viewPager2
+            val tabLayout = binding.tabLayout
+            val adapter = ViewPagerAdapter(it,currencylist,childFragmentManager, lifecycle)
+            viewPager2.adapter = adapter
+
+            TabLayoutMediator(tabLayout, viewPager2) { tab, position ->
+                //Some implementation
+            }.attach()
+
+
+
+        })
+
+
+
+
+
+
+
     }
 
-    override fun onResume() {
-        super.onResume()
-        glavni()
-        indicator()
-    }
+
 
     companion object {
         /**
