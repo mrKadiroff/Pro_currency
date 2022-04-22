@@ -9,7 +9,6 @@ import com.example.pro_valyuta.livedata.RecyclerFragment
 import com.example.pro_valyuta.retrofit.Valyuta
 
 class ViewPagerAdapterProba(
-    var list: List<Valyuta>?,
     var listRoom: List<Valyuta>, fragmentManager: FragmentManager, lifecycle: Lifecycle) :
     FragmentStateAdapter(fragmentManager, lifecycle) {
 
@@ -18,6 +17,6 @@ class ViewPagerAdapterProba(
     }
 
     override fun createFragment(position: Int): Fragment {
-        return RecyclerFragment.newInstance(listRoom!![position].code, list!![position].code)
+        return RecyclerFragment.newInstance(listRoom!![position].code, listRoom!![position].code)
     }
 }

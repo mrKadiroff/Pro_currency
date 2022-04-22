@@ -10,6 +10,8 @@ import com.example.pro_valyuta.Room.AppDatabase
 import com.example.pro_valyuta.adapters.CurrencyAdapter
 import com.example.pro_valyuta.databinding.FragmentGlavniBinding
 import com.example.pro_valyuta.databinding.FragmentRecyclerBinding
+import java.util.*
+import kotlin.collections.ArrayList
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -53,6 +55,10 @@ class RecyclerFragment : Fragment() {
 
     private fun setRv(code:String) {
         val currencyByCode = appDatabase.valyutaDao().getCurrencyByCode(code)
+
+
+
+
 
         currencyAdapter = CurrencyAdapter(currencyByCode)
         binding.rv.adapter = currencyAdapter

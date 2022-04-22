@@ -95,8 +95,8 @@ class HomeFragment : Fragment() {
 
     private fun RvPager() {
 
-        mainViewModel.getCurrency().observe(requireActivity(), Observer {
-            Log.d(TAG, "onCreateView: ${it}")
+//        mainViewModel.getCurrency().observe(requireActivity(), Observer {
+//            Log.d(TAG, "onCreateView: ${it}")
 
 
 
@@ -104,7 +104,7 @@ class HomeFragment : Fragment() {
             currencylist = appDatabase.valyutaDao().getAllCurrency() as ArrayList<Valyuta>
             val viewPager2 = binding.viewPagerproba
             val tabLayout = binding.tabLayout
-            val adapter = ViewPagerAdapterProba(it,currencylist,childFragmentManager, lifecycle)
+            val adapter = ViewPagerAdapterProba(currencylist,childFragmentManager, lifecycle)
             viewPager2.adapter = adapter
 
             TabLayoutMediator(tabLayout, viewPager2) { tab, position ->
@@ -112,8 +112,8 @@ class HomeFragment : Fragment() {
             }.attach()
 
 
-
-        })
+//
+//        })
 
 
     }
@@ -139,9 +139,12 @@ class HomeFragment : Fragment() {
 
                         datelist = ArrayList()
                         datelist = appDatabase.valyutaDao().getCurrencyByDate(it.date) as ArrayList<Valyuta>
-                        if (datelist.isNullOrEmpty() || currencylist.isNullOrEmpty()){
+                        if (currencylist.isNullOrEmpty()){
+                            appDatabase.valyutaDao().insertCurrency(it)
+                        }else if (datelist.isNullOrEmpty()){
                             appDatabase.valyutaDao().insertCurrency(it)
                         }
+
 
 
 
