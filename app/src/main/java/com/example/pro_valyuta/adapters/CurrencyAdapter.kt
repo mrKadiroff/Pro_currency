@@ -14,7 +14,8 @@ class CurrencyAdapter(var list: List<Valyuta>) : RecyclerView.Adapter<CurrencyAd
         fun onBind(valyuta: Valyuta) {
           userListBinding.olinishi.text = valyuta.nbu_buy_price
             userListBinding.sotilishii.text = valyuta.cb_price
-            userListBinding.datee.text = valyuta.date
+            userListBinding.datee.text = valyuta.date.subSequence(0, valyuta.date.indexOf(" "))
+            userListBinding.timee.text = valyuta.date.subSequence(valyuta.date.indexOf(" "), valyuta.date.length)
         }
     }
 

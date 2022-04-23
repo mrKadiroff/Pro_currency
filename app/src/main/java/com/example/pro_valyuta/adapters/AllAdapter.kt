@@ -8,7 +8,7 @@ import com.example.pro_valyuta.databinding.AllCurrencyBinding
 import com.example.pro_valyuta.databinding.UserListBinding
 import com.example.pro_valyuta.retrofit.Valyuta
 
-class AllAdapter(var list: List<Valyuta>) : RecyclerView.Adapter<AllAdapter.Vh>() {
+class AllAdapter(var list: List<Valyuta>, var onItemClickListner: OnItemClickListner) : RecyclerView.Adapter<AllAdapter.Vh>() {
 
     inner class Vh(var userListBinding: AllCurrencyBinding) :
         RecyclerView.ViewHolder(userListBinding.root){
@@ -18,6 +18,11 @@ class AllAdapter(var list: List<Valyuta>) : RecyclerView.Adapter<AllAdapter.Vh>(
             userListBinding.sotilishi.text = "${valyuta.cb_price} UZS"
             userListBinding.date.text = valyuta.code
             Glide.with(userListBinding.root.context).load("https://nbu.uz/local/templates/nbu/images/flags/${valyuta.code}.png").into(userListBinding.simvol)
+
+            userListBinding.calculator.setOnClickListener {
+                onItemClickListner.onItemClick(valyuta,adapterPosition)
+            }
+
         }
     }
 
@@ -31,5 +36,7 @@ class AllAdapter(var list: List<Valyuta>) : RecyclerView.Adapter<AllAdapter.Vh>(
 
     override fun getItemCount(): Int = list.size
 
-
+    interface OnItemClickListner{
+        fun onItemClick(valyuta: Valyuta,position: Int)
+    }
 }

@@ -138,17 +138,10 @@ class HomeFragment : Fragment() {
                     data!!.forEach {
 
                         datelist = ArrayList()
-                        datelist = appDatabase.valyutaDao().getCurrencyByDate(it.date) as ArrayList<Valyuta>
-                        if (currencylist.isNullOrEmpty()){
-                            appDatabase.valyutaDao().insertCurrency(it)
-                        }else if (datelist.isNullOrEmpty()){
+                        datelist = appDatabase.valyutaDao().getCurrencyByDate(it.date,it.code) as ArrayList<Valyuta>
+                        if (datelist.isNullOrEmpty()){
                             appDatabase.valyutaDao().insertCurrency(it)
                         }
-
-
-
-
-
 
 
 
@@ -240,6 +233,7 @@ class HomeFragment : Fragment() {
 
         mainViewModel.getCurrency().observe(requireActivity(), Observer {
             Log.d(TAG, "onCreateView: ${it}")
+
 
 
 

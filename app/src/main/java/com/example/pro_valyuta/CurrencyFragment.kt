@@ -9,6 +9,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.pro_valyuta.adapters.AllAdapter
 import com.example.pro_valyuta.adapters.ViewPagerAdapter
@@ -76,7 +77,14 @@ class CurrencyFragment : Fragment() {
                     tempArrayList = ArrayList()
                     tempArrayList.addAll(list)
 
-                        allAdapter = AllAdapter(tempArrayList)
+                        allAdapter = AllAdapter(tempArrayList,object : AllAdapter.OnItemClickListner{
+                            override fun onItemClick(valyuta: Valyuta, position: Int) {
+                                val bundle = Bundle()
+                                bundle.putInt("position", position)
+                                findNavController().navigate(R.id.calculatorFragment, bundle)
+                            }
+
+                        })
                     binding.rvAll.adapter = allAdapter
 
 

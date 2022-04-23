@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.Toast
 import android.widget.Toolbar
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -24,6 +25,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
         val bottomanavgation = findViewById<BottomNavigationView>(R.id.bottom_navigation)
         val navigationView = findViewById<NavigationView>(R.id.navigation_view)
@@ -50,11 +52,11 @@ class MainActivity : AppCompatActivity() {
 
             when (menuItem.itemId) {
                 R.id.home_menu -> {
-                    Toast.makeText(this, "Home", Toast.LENGTH_SHORT).show()
+
                     drawerLayout.closeDrawers()
                 }
                 R.id.profile_menu -> {
-                    Toast.makeText(this, "Profile", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Done by Mr_KadiroFF", Toast.LENGTH_LONG).show()
                     drawerLayout.closeDrawers()
                 }
 

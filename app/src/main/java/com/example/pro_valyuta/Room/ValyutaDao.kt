@@ -21,6 +21,6 @@ interface ValyutaDao {
 
 
 
-    @Query("select * from valyuta where date=:date")
-    fun getCurrencyByDate(date: String): List<Valyuta>
+    @Query("select * from valyuta where date=:date and code=:code")
+    fun getCurrencyByDate(date: String,code: String): List<Valyuta>
 }
